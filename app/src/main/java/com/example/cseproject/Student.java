@@ -38,7 +38,7 @@ public class Student extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth=FirebaseAuth.getInstance();
-        setContentView(R.layout.activity_afterlogin);
+        setContentView(R.layout.activity_student);
         Button  uploadBtn=findViewById(R.id.upload);
         //Button copytext=findViewById(R.id.copytext);
         CaptureImageButton=findViewById(R.id.capture);

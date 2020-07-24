@@ -2,11 +2,17 @@ package com.example.cseproject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +29,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class UploadBook extends AppCompatActivity {
     EditText editPDFName;
     Button uploadBtn;
@@ -83,14 +90,30 @@ public class UploadBook extends AppCompatActivity {
                 uploadPdf uploadPdf=new uploadPdf(editPDFName.getText().toString(),url.toString());
                 databaseReference.child(databaseReference.push().getKey()).setValue(uploadPdf);
 
+            notification();
+
         }
     }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
         @Override
         public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-            Toast.makeText(UploadBook.this, "Chill Bro", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UploadBook.this, "After finishing download,will notify you ", Toast.LENGTH_SHORT).show();
         }
     });
-        Toast.makeText(UploadBook.this, "Uploaded SuccessFully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(UploadBook.this, "chill bro,uploading.after finishing, will notify you", Toast.LENGTH_SHORT).show();
 
     }
+
+    private void notification() {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            NotificationChannel channel=new NotificationChannel("n","n",NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager  manager=getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+            NotificationCompat.Builder builder=new NotificationCompat.Builder(this,"n").setContentText("CSE PROJECT").setSmallIcon(R.drawable.ic_launcher_background).setAutoCancel(true).setContentText("BOOK UPLOADED");
+            NotificationManagerCompat managerCompat=NotificationManagerCompat.from(this);
+            managerCompat.notify(999,builder.build());
+
+        }
+    }
+
+
 }
